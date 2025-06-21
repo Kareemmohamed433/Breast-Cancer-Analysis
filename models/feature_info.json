@@ -1,0 +1,47 @@
+{
+  "feature_names": [
+    "radius_mean", "texture_mean", "perimeter_mean", "area_mean", "smoothness_mean",
+    "compactness_mean", "concavity_mean", "concave_points_mean", "symmetry_mean", "fractal_dimension_mean",
+    "radius_se", "texture_se", "perimeter_se", "area_se", "smoothness_se",
+    "compactness_se", "concavity_se", "concave_points_se", "symmetry_se", "fractal_dimension_se",
+    "radius_worst", "texture_worst", "perimeter_worst", "area_worst", "smoothness_worst",
+    "compactness_worst", "concavity_worst", "concave_points_worst", "symmetry_worst", "fractal_dimension_worst"
+  ],
+  "feature_descriptions": [
+    "Mean of distances from center to points on the perimeter",
+    "Standard deviation of gray-scale values",
+    "Perimeter of the mass",
+    "Area of the mass",
+    "Smoothness (local variation in radius lengths)",
+    "Compactness (perimeter^2 / area - 1.0)",
+    "Concavity (severity of concave portions)",
+    "Number of concave portions",
+    "Symmetry",
+    "Fractal dimension",
+    "Standard error of radius",
+    "Standard error of texture",
+    "Standard error of perimeter",
+    "Standard error of area",
+    "Standard error of smoothness",
+    "Standard error of compactness",
+    "Standard error of concavity",
+    "Standard error of concave points",
+    "Standard error of symmetry",
+    "Standard error of fractal dimension",
+    "Worst radius (mean of the three largest values)",
+    "Worst texture",
+    "Worst perimeter",
+    "Worst area",
+    "Worst smoothness",
+    "Worst compactness",
+    "Worst concavity",
+    "Worst concave points",
+    "Worst symmetry",
+    "Worst fractal dimension"
+  ],
+  "target_names": ["malignant", "benign"],
+  "model_performance": {
+    "accuracy": 0.95,
+    "roc_auc": 0.98
+  }
+}

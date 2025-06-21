@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Prediction Result{% endblock %}
+
+{% block extra_css %}
+<style>
+    .result-card {
+        border-left: 5px solid;
+        transition: all 0.3s ease;
+    }
+    .benign-card {
+        border-left-color: #28a745;
+        background-color: rgba(40, 167, 69, 0.05);
+    }
+    .malignant-card {
+        border-left-color: #dc3545;
+        background-color: rgba(220, 53, 69, 0.05);
+    }
+    .confidence-meter {
+        height: 25px;
+        border-radius: 12px;
+    }
+    .model-metrics {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card result-card {{ 'benign-card' if class_name == 'Benign' else 'malignant-card' }} mb-4">
+            <div class="card-header bg-transparent">
+                <h2 class="mb-0 text-center">
+                    <i class="bi bi-clipboard2-check"></i> Diagnosis Result
+                </h2>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <h3 class="{{ 'text-success' if class_name == 'Benign' else 'text-danger' }}">
+                        {{ class_name }} Tumor
+                    </h3>
+                    <p class="lead">Prediction Confidence: {{ probability|int }}%</p>
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="mb-3">Confidence Level</h5>
+                    <div class="progress confidence-meter">
+                        <div class="progress-bar {{ 'bg-success' if class_name == 'Benign' else 'bg-danger' }}" 
+                             role="progressbar" 
+                             style="width: {{ probability }}%"
+                             aria-valuenow="{{ probability }}" 
+                             aria-valuemin="2" 
+                             aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="model-metrics mb-4">
+                    <h5 class="mb-3 text-center">
+                        <i class="bi bi-speedometer2"></i> Model Performance
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Accuracy:</span>
+                                <strong>{{ (model_performance.accuracy * 100)|round(1) }}%</strong>
+                            </div>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-info" role="progressbar" 
+                                     style="width: {{ model_performance.accuracy * 100 }}%">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>ROC AUC Score:</span>
+                                <strong>{{ model_performance.roc_auc|round(3) }}</strong>
+                            </div>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-warning" role="progressbar" 
+                                     style="width: {{ model_performance.roc_auc * 100 }}%">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="/" class="btn btn-outline-primary px-4">
+                        <i class="bi bi-arrow-left"></i> Back to Form
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

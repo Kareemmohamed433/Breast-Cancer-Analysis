@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Breast Cancer Input{% endblock %}
+
+{% block extra_css %}
+<style>
+    .feature-card {
+        transition: all 0.3s ease;
+        border-left: 3px solid #0d6efd;
+        padding-left: 10px;
+        background-color: white;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .feature-card:hover {
+        background-color: #f8f9fa;
+    }
+    .sample-btn {
+        min-width: 180px;
+    }
+    .form-section {
+        background-color: white;
+        border-radius: 8px;
+        padding: 25px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="form-section">
+            <h1 class="mb-4 text-center">
+                <i class="bi bi-clipboard2-pulse"></i> Breast Cancer Classification
+            </h1>
+            <p class="text-center text-muted mb-4">
+                Enter the patient's tumor characteristics to predict diagnosis
+            </p>
+
+            <form method="post" action="/predict" id="predictionForm">
+                <div class="row g-3">
+                    {% for i in range(features|length) %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="feature-card">
+                            <label for="feature_{{i}}" class="form-label fw-bold">
+                                {{ features[i] | replace('_', ' ') | title }}
+                            </label>
+                            <input type="number" step="any" class="form-control feature-input mb-1" 
+                                   name="feature_{{i}}" id="feature_{{i}}" required>
+                            <small class="text-muted d-block mb-2">
+                                <i class="bi bi-info-circle"></i> {{ descriptions[i] }}
+                            </small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="d-flex flex-wrap gap-3 mt-4 justify-content-center">
+                    <button type="submit" class="btn btn-primary px-4 py-2">
+                        <i class="bi bi-activity"></i> Predict Diagnosis
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-success sample-btn" 
+                            onclick="loadSample('benign')">
+                        <i class="bi bi-check-circle"></i> Load Benign Sample
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-danger sample-btn" 
+                            onclick="loadSample('malignant')">
+                        <i class="bi bi-exclamation-triangle"></i> Load Malignant Sample
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Sample test data
+const sampleData = {
+    benign: [
+        9.029, 17.33, 58.79, 250.5, 0.1066, 0.1413, 0.313, 0.04375, 0.2111, 0.08046,
+        0.3274, 1.194, 1.885, 17.67, 0.009549, 0.08606, 0.3038, 0.03322, 0.04197, 0.009559,
+        10.31, 22.65, 65.5, 324.7, 0.1482, 0.4365, 1.252, 0.175, 0.4228, 0.1175
+    ],
+    malignant: [
+        12.45, 15.7, 82.57, 477.1, 0.1278, 0.17, 0.1578, 0.08089, 0.2087, 0.07613,
+        0.3345, 0.8902, 2.217, 27.19, 0.00751, 0.03345, 0.03672, 0.01137, 0.02165, 0.005082,
+        15.47, 23.75, 103.4, 741.6, 0.1791, 0.5249, 0.5355, 0.1741, 0.3985, 0.1244
+    ]
+};
+
+function loadSample(type) {
+    const data = sampleData[type];
+    for (let i = 0; i < data.length; i++) {
+        const input = document.getElementById(`feature_${i}`);
+        input.value = data[i];
+        input.classList.add('bg-success', 'bg-opacity-10');
+        setTimeout(() => input.classList.remove('bg-success', 'bg-opacity-10'), 500);
+    }
+    
+    const toast = new bootstrap.Toast(document.getElementById('sampleToast'));
+    document.getElementById('toastMessage').textContent = 
+        `${type === 'benign' ? 'Benign' : 'Malignant'} sample loaded successfully`;
+    toast.show();
+}
+</script>
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="sampleToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-success text-white">
+            <strong class="me-auto">Sample Loaded</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="toastMessage"></div>
+    </div>
+</div>
+{% endblock %}
